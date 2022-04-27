@@ -381,6 +381,10 @@ order by sum(quantity) DESC;
 
 # CHAP 02: Use Window Functions to Perform Calculations across Row Sets
 
+## 예 1
+
+- 
+
 ```sql
 select sku,
 	product_name,
@@ -396,7 +400,9 @@ order by sku, size;
 
 ![image](https://user-images.githubusercontent.com/49010295/165501413-7bf482c8-931c-4a13-a8fa-f4de7c013c37.png)
 
+## 예 2
 
+- xyz: alias 같은 느낌 
 
 ```sql
 select sku,
@@ -415,6 +421,11 @@ order by sku, size;
 
 ![image](https://user-images.githubusercontent.com/49010295/165501695-dbd33b2e-ebb7-4169-969e-8fbf5157a69d.png)
 
+## 예 3
+
+- line total: 주문에서 특정 제품 가격 합 
+- order total: 주문의 모든 제품 가격 합 
+
 ```sql
 select order_lines.order_id,
 	order_lines.line_id,
@@ -432,7 +443,10 @@ from sales.order_lines inner join inventory.products
 
 ![image-20220427114742662](/home/yoo.kim/.config/Typora/typora-user-images/image-20220427114742662.png)
 
+## 예 4
 
+- between 0 preceding and 2 following: 뒤에 0개 앞에 2개 더한 것. 
+  - 즉, 101이 었을때, 101 + 102 + 103 이 됨
 
 ```sql
 select order_id,
@@ -447,6 +461,14 @@ from sales.orders;
 
 ![image](https://user-images.githubusercontent.com/49010295/165502083-63d52869-ea68-4efd-9486-5750b6a63d07.png)
 
+## 예 5
+
+- first_value: 첫번째 값
+- last_value: 마지막 값
+- nth_value: 특정 위치 값
+- unbounded로 모든 위치 지정해야됨. 
+  - `last_value(company) over(order by company)`  만 하면 값이 이상하게 나옴. (뒤에 로우 들은 무시되기 때문)
+
 ```sql
 select company,
 	first_value(company) over(order by company
@@ -460,6 +482,10 @@ order by company;
 ```
 
 ![image-20220427114918185](/home/yoo.kim/.config/Typora/typora-user-images/image-20220427114918185.png)
+
+## 예 6
+
+- 고객의 첫번째 주문일과 최근 주문일 가져올때, first_value와 last_value 유용
 
 ```sql
 select distinct customer_id,
@@ -477,6 +503,10 @@ order by customer_id;
 
 ![image](https://user-images.githubusercontent.com/49010295/165502288-f7d78119-078c-4c73-b91b-dc9830ea3e20.png)
 
+## 예 7
+
+- 카테고리 id의 사이즈별로 조사할때
+
 ```sql
 select category_id, product_name, size, price,
 	max(price) over(w),
@@ -488,7 +518,7 @@ window w as (partition by category_id, size)
 order by category_id, product_name, size;
 ```
 
-![image-20220427115039811](/home/yoo.kim/.config/Typora/typora-user-images/image-20220427115039811.png)
+![image](https://user-images.githubusercontent.com/49010295/165503719-69f7a3da-caba-4cfa-83ac-8dd401c10f66.png)
 
 
 
