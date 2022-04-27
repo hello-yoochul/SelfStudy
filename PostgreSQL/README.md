@@ -503,7 +503,9 @@ order by customer_id;
 
 ![image](https://user-images.githubusercontent.com/49010295/165502288-f7d78119-078c-4c73-b91b-dc9830ea3e20.png)
 
-## 예 7
+## Challenge
+
+![image](https://user-images.githubusercontent.com/49010295/165582377-d51d0569-4897-4f91-b4f7-dd6ed2bc7fa1.png)
 
 - 카테고리 id의 사이즈별로 조사할때
 
@@ -520,11 +522,69 @@ order by category_id, product_name, size;
 
 ![image](https://user-images.githubusercontent.com/49010295/165503719-69f7a3da-caba-4cfa-83ac-8dd401c10f66.png)
 
+# CHAP 03: Statistics Based on Sorted Data within Groups
+
+## 예 1
+
+- [링크](https://leafo.net/guides/postgresql-calculating-percentile.html)
+  - `percentile_disc` will return a value from the input set closest to the percentile you request
+  - `percentile_cont` will return an interpolated value between multiple values based on the distribution. You can think of this as being more accurate, but can return a fractional value between the two values from the input
+
+```sql
+select gender,
+    percentile_disc(0.5) within group (order by height_inches) as "discrete median",
+    percentile_cont(0.5) within group (order by height_inches) as "continuous median"
+from public.people_heights
+group by rollup (gender);
+```
+
+![image](https://user-images.githubusercontent.com/49010295/165579586-1c701526-f2d0-4577-97c1-a619cc57b372.png)
+
+## 예 2
+
+```sql
+select
+    percentile_cont(.25) within group (order by height_inches) as "1st quartile",
+    percentile_cont(.50) within group (order by height_inches) as "2nd quartile",
+    percentile_cont(.75) within group (order by height_inches) as "3rd quartile"
+from public.people_heights;
+```
+
+## 예 3
+
+- mode() 제약 
+  - 주의: 다른 동일한 값이 있음에도 1개만 리턴
+
+```sql
+select
+	mode() within group (order by height_inches)
+from public.people_heights;
+
+select height_inches, count(*)
+from public.people_heights
+group by height_inches
+order by count(*) desc;
+```
+
+## Challange
+
+## ![image](https://user-images.githubusercontent.com/49010295/165582071-cd09abed-c7bc-4984-9ae7-9ba53c135052.png)
+
+```sql
+-- Obtain statistical information about product pricing
+select category_id,
+	min(price) as "min price",
+	percentile_cont(.25) within group (order by price) as "1st quartile",
+	percentile_cont(.50) within group (order by price) as "2nd quartile",
+	percentile_cont(.75) within group (order by price) as "3rd quartile",
+	max(price) as "max price",
+	max(price) - min(price) as "price range"
+from inventory.products
+group by rollup (category_id);
+```
 
 
-
-
-
+​              
 
 
 
