@@ -441,7 +441,7 @@ from sales.order_lines inner join inventory.products
 	on order_lines.sku = products.sku;
 ```
 
-![image-20220427114742662](/home/yoo.kim/.config/Typora/typora-user-images/image-20220427114742662.png)
+![image](https://user-images.githubusercontent.com/49010295/165576438-000f7daf-e7e4-40bf-b263-df4486d1f3a4.png)
 
 ## 예 4
 
@@ -450,12 +450,12 @@ from sales.order_lines inner join inventory.products
 
 ```sql
 select order_id,
-sum(order_id) over (order by order_id rows between 0 preceding and 2 following)
-	as "3 period leading sum",
-sum(order_id) over (order by order_id rows between 2 preceding and 0 following)
-	as "3 period trailing sum",
-avg(order_id) over (order by order_id rows between 1 preceding and 1 following)
-	as "3 period moving average"
+    sum(order_id) over (order by order_id rows between 0 preceding and 2 following)
+        as "3 period leading sum",
+    sum(order_id) over (order by order_id rows between 2 preceding and 0 following)
+        as "3 period trailing sum",
+    avg(order_id) over (order by order_id rows between 1 preceding and 1 following)
+        as "3 period moving average"
 from sales.orders;
 ```
 
@@ -481,7 +481,7 @@ from sales.customers
 order by company;
 ```
 
-![image-20220427114918185](/home/yoo.kim/.config/Typora/typora-user-images/image-20220427114918185.png)
+![image](https://user-images.githubusercontent.com/49010295/165576717-08f54b56-8014-46d2-acd2-984988ccf783.png)
 
 ## 예 6
 
