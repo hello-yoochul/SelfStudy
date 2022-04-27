@@ -381,6 +381,8 @@ order by sum(quantity) DESC;
 
 # CHAP 02: Use Window Functions to Perform Calculations across Row Sets
 
+## 예 1
+
 ```sql
 select sku,
 	product_name,
@@ -396,7 +398,7 @@ order by sku, size;
 
 ![image](https://user-images.githubusercontent.com/49010295/165501413-7bf482c8-931c-4a13-a8fa-f4de7c013c37.png)
 
-
+## 예 2
 
 ```sql
 select sku,
@@ -415,6 +417,8 @@ order by sku, size;
 
 ![image](https://user-images.githubusercontent.com/49010295/165501695-dbd33b2e-ebb7-4169-969e-8fbf5157a69d.png)
 
+## 예 3
+
 ```sql
 select order_lines.order_id,
 	order_lines.line_id,
@@ -432,7 +436,7 @@ from sales.order_lines inner join inventory.products
 
 ![image-20220427114742662](/home/yoo.kim/.config/Typora/typora-user-images/image-20220427114742662.png)
 
-
+## 예 4
 
 ```sql
 select order_id,
@@ -461,6 +465,8 @@ order by company;
 
 ![image-20220427114918185](/home/yoo.kim/.config/Typora/typora-user-images/image-20220427114918185.png)
 
+## 예 5
+
 ```sql
 select distinct customer_id,
 	first_value(order_date)
@@ -477,6 +483,8 @@ order by customer_id;
 
 ![image](https://user-images.githubusercontent.com/49010295/165502288-f7d78119-078c-4c73-b91b-dc9830ea3e20.png)
 
+## 예 6
+
 ```sql
 select category_id, product_name, size, price,
 	max(price) over(w),
@@ -488,7 +496,7 @@ window w as (partition by category_id, size)
 order by category_id, product_name, size;
 ```
 
-![image-20220427115039811](/home/yoo.kim/.config/Typora/typora-user-images/image-20220427115039811.png)
+![image](https://user-images.githubusercontent.com/49010295/165503719-69f7a3da-caba-4cfa-83ac-8dd401c10f66.png)
 
 
 
