@@ -1,5 +1,7 @@
 # Advanced PostgreSQL
 
+# CHAP 01: Obtain Summary Statistics by Grouping Rows
+
 링크드인 러닝의 자료를 가지고 공부하였습니다. ([link](https://www.linkedin.com/learning/postgresql-advanced-queries))
 
 ## Docker 로 PostgreSQL 사용 환경 만들기 
@@ -376,6 +378,147 @@ group by rollup (sku)
 order by sum(quantity) DESC;
 -- 50 rows
 ```
+
+# CHAP 02: Use Window Functions to Perform Calculations across Row Sets
+
+```sql
+select sku,
+	product_name,
+	size,
+	category_id,
+	price,
+	avg(price) over(partition by size) as "average price for size",
+	price - avg(price) over(partition by size) as "difference"
+from inventory.products
+order by sku, size;
+-- 114 rows 
+```
+
+![image](https://user-images.githubusercontent.com/49010295/165501413-7bf482c8-931c-4a13-a8fa-f4de7c013c37.png)
+
+
+
+```sql
+select sku,
+	product_name,
+	category_id,
+	size,
+	price,
+	avg(price) over (xyz),
+	min(price) over (xyz),
+	max(price) over (xyz)
+from inventory.products
+window xyz as (partition by category_id)
+order by sku, size;
+-- 114 rows
+```
+
+![image](https://user-images.githubusercontent.com/49010295/165501695-dbd33b2e-ebb7-4169-969e-8fbf5157a69d.png)
+
+```sql
+select order_lines.order_id,
+	order_lines.line_id,
+	order_lines.sku,
+	order_lines.quantity,
+	products.price as "price each",
+	order_lines.quantity * products.price as "line total",
+	sum (order_lines.quantity * products.price)
+		over (partition by order_id) as "order total",
+	sum (order_lines.quantity * products.price)
+		over (partition by order_id order by line_id) as "running total"
+from sales.order_lines inner join inventory.products
+	on order_lines.sku = products.sku;
+```
+
+![image-20220427114742662](/home/yoo.kim/.config/Typora/typora-user-images/image-20220427114742662.png)
+
+
+
+```sql
+select order_id,
+sum(order_id) over (order by order_id rows between 0 preceding and 2 following)
+	as "3 period leading sum",
+sum(order_id) over (order by order_id rows between 2 preceding and 0 following)
+	as "3 period trailing sum",
+avg(order_id) over (order by order_id rows between 1 preceding and 1 following)
+	as "3 period moving average"
+from sales.orders;
+```
+
+![image](https://user-images.githubusercontent.com/49010295/165502083-63d52869-ea68-4efd-9486-5750b6a63d07.png)
+
+```sql
+select company,
+	first_value(company) over(order by company
+		rows between unbounded preceding and unbounded following),
+	last_value(company) over(order by company
+		rows between unbounded preceding and unbounded following),
+	nth_value(company, 3) over(order by company
+		rows between unbounded preceding and unbounded following)
+from sales.customers
+order by company;
+```
+
+![image-20220427114918185](/home/yoo.kim/.config/Typora/typora-user-images/image-20220427114918185.png)
+
+```sql
+select distinct customer_id,
+	first_value(order_date)
+		over (partition by customer_id
+			 order by order_date
+			 rows between unbounded preceding and unbounded following),
+	last_value(order_date)
+		over (partition by customer_id
+			 order by order_date
+			 rows between unbounded preceding and unbounded following)
+from sales.orders
+order by customer_id;
+```
+
+![image](https://user-images.githubusercontent.com/49010295/165502288-f7d78119-078c-4c73-b91b-dc9830ea3e20.png)
+
+```sql
+select category_id, product_name, size, price,
+	max(price) over(w),
+	min(price) over(w),
+	avg(price) over(w),
+	count(*) over(w)
+from inventory.products
+window w as (partition by category_id, size)
+order by category_id, product_name, size;
+```
+
+![image-20220427115039811](/home/yoo.kim/.config/Typora/typora-user-images/image-20220427115039811.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
