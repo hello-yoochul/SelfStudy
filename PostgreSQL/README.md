@@ -702,12 +702,105 @@ from inventory.products;
 
 # CHAP 6: Additional Querying Techniques for Common Problems
 
+## 예 1 - row_number( )
 
+```sql
+select * from inventory.products;
 
+select sku, product_name, size,
+	row_number() over (partition by product_name order by sku)
+from inventory.products;
+```
 
-​              
+## 예 2 - 타입 바꾸기
 
+```sql
+select order_id,
+	order_date::text,
+	customer_id
+from sales.orders;
+```
 
+## 예 3 - lag( ), lead( )
+
+- [계층형 쿼리](https://devdhjo.github.io/sqld/2019/11/26/database-sqld-020.html)랑 비슷한듯
+
+```sql
+select order_id,
+	customer_id,
+	order_date,
+	lag(order_date, 1) over(partition by customer_id order by order_id)
+		as "previous order date",
+	lead (order_date, 1) over(partition by customer_id order by order_id)
+		as "next order",
+	lead (order_date, 1) over(partition by customer_id order by order_id) -
+		order_date as "time between orders"
+from sales.orders
+order by customer_id, order_date;
+```
+
+## 예 4 - IN 
+
+```sql
+-- us an in() function with a list
+select *
+from inventory.products
+where product_name in('Delicate', 'Bold', 'Light');
+
+-- use an in function with a sub select query
+select *
+from inventory.products
+where product_name in(
+		select product_name
+		from inventory.products
+		group by product_name
+		having count(*) >= 5
+);
+
+-- determine the query used as a sub select above
+select product_name, count(*)
+from inventory.products
+group by product_name
+having count(*) >= 5;
+```
+
+## 예 5 - generate_series( )
+
+```sql
+select generate_series(100,120);
+select generate_series(100,120,5);
+
+-- 0~10000 시리즈 안에 주문 찾기 (10 단위)
+select * 
+from sales.orders
+where order_id in(
+	select generate_series(0,10000,10)	
+)
+order by order_id;
+
+select * 
+from sales.orders
+where order_date in(
+    -- 텍스트를 타임스탬프로 변경
+	select generate_series('2021-03-15'::timestamp, '2021-03-31'::timestamp, '5 days')	
+)
+order by order_id;
+```
+
+## Challenge
+
+![image](https://user-images.githubusercontent.com/49010295/165636894-ed363ffc-f810-4665-b1aa-35a4db47687d.png)
+
+```sql
+select person_id,
+	name,
+	height_inches,
+	lag(name, 1) over (order by height_inches) as "is taller than",
+	height_inches - lag(height_inches, 1) over (order by height_inches)
+		as "by this many inches"
+from public.people_heights
+order by height_inches desc;              
+```
 
 
 
