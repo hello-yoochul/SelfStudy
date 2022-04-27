@@ -583,8 +583,108 @@ from inventory.products
 group by rollup (category_id);
 ```
 
+​              
+
+# CHAP 4: Ranking Data with Windows and Hypothetical Sets
+
+## 예 1
+
+```sql
+-- ranking with window functions
+select name, height_inches, gender,
+	rank() over (partition by gender order by height_inches desc),
+	dense_rank() over (partition by gender order by height_inches desc)
+from public.people_heights
+order by gender, height_inches desc;
+```
+
+## 예 2
+
+- 키가 70 인치인 사람을 남녀 각각으로 넣어봤을 때 순위 (hypothetical)
+
+```sql
+-- using rank as a hypothetical grouping set aggregate
+select name, height_inches
+from public.people_heights
+order by height_inches desc;
+
+select gender,
+	rank(70) within group (order by height_inches desc)
+from public.people_heights
+group by rollup (gender);
+```
+
+## 예 3
+
+- 백분위 랭크
+
+```sql
+select name, gender, height_inches,
+	percent_rank() over (order by height_inches desc),
+	case
+		when percent_rank() over (order by height_inches desc) < .25 then '1st'
+		when percent_rank() over (order by height_inches desc) < .50 then '2nd'
+		when percent_rank() over (order by height_inches desc) < .75 then '3rd'
+		else '4th'
+	end as "quartile rank"
+from public.people_heights
+order by height_inches desc;
+```
+
+## 예 4
+
+- The **CUME_DIST**() function returns the cumulative distribution of a value within a set of values.
+- percent_rank이랑 거의 비슷 (차이는 percent_rank는 계산에 본인 로우를 포함 x)
+
+```sql
+select name, height_inches,
+	percent_rank() over (order by height_inches desc),
+	cume_dist() over (order by height_inches desc)
+from public.people_heights
+order by height_inches desc;
+```
+
+## Challenge 
+
+```sql
+-- rank product pricing overall, by category, and by size
+
+select product_name, category_id, size, price,
+	dense_rank() over (order by price desc) as "rank overall",
+	dense_rank() over (partition by category_id order by price desc) as "rank category",
+	dense_rank() over (partition by size order by price desc) as "rank price"
+from inventory.products
+order by category_id, price desc;
+```
+
+# CHAP 5: Define Output Values with Conditional Expressions
+
+
+
+# CHAP 6: Additional Querying Techniques for Common Problems
+
+
+
 
 ​              
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
