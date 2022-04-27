@@ -802,11 +802,99 @@ from public.people_heights
 order by height_inches desc;              
 ```
 
+# QUIZ
 
+## 1
 
+- Which SQL clause is used to filter groups from a result set?
+  - HAVING
+- Aggregate functions can be applied to a subset of the data using what keyword?
+  - FILTER
+- Which of these GROUP BY clauses will display subtotal and grand total rows?
+  - GROUP BY ROLLUP (dept_name, emp_id)
+- Which keyword, when added to a GROUP BY clause, will return all possible combination of grouping parameters?
+  - CUBE
+- The BOOL_AND() function will return 'true' under which circumstance?
+  - All rows are true.
+- Standard deviation and Variance are ways to describe what aspect of a data set?
+  - 	Distribution
+- In order to use the `max()`, `min()`, or `avg()` functions in a SELECT clause, what other clause does your query need to have?
+  - GROUP BY
+    - These three aggregate functions compute values from a group of records.
 
+## 2
 
+- Which keyword can be used with `between _____ preceding and _____ following` to create a sorted window frame that contains all rows?
+  - 	unbounded
+- You have a column of values named 'data' that contains the numbers 10,  20, 30. What would be the result of this window function?   `avg(data) over (order by data)`
+  - 10, 15, 20
+    - The ORDER BY clause in the OVER clause causes the window function to  operate only on rows up to and including the current row in the frame.
+- Which of these will create a five period moving average of the daily stock price data?
+  - avg(stock_price) over (order by date rows between 2 preceding and 2 following)'	
+    - This window function would average the current price with the two previous and two subsequent days.
+- You have a data table that stores information about a wide variety of  animals and their weights. Which window function will return the average weight for each species?
+  - avg(weight) over (partition by species) 
+    - Creating segments within the window frame requires the PARTITION BY keywords.
+- Why would you add a window clause to a query?
+  - to create a window frame that's used by several window functions
+- Which clause turns an aggregate function into a window function?
+  - OVER()
 
+## 3
+
+- What does the PostgreSQL RANGE() function do?
+  - There is no RANGE() function in PostgreSQL.
+- What does the NTIL() function do?
+  - It separates the data into equal groups. '
+    - The NTIL() function only creates groups with an equal number of rows. It does not evaluate tied values.
+- What is the mode of a data set?
+  - the value that occurs the most number of times
+    - Be aware that the PostgreSQL MODE() function only returns one of these  values if there are more than one with the same number of occurrences.
+- Which of these describes a continuous median?
+  - For datasets with an even number of data points, a continuous median will sort the data, then average the two middle values.
+
+## 4
+
+- Which value will the PERCENT_RANK() function never return?
+  - 1.5
+    - PERCENT_RANK returns a percentage value that will always be between 0 and 1.
+- Which of these best describes the output of the cumulative distribution function CUME_DIST()?
+  - the row's sorted position, divided by the number of rows in the data set 
+- Which of these is NOT true about the PostgreSQL ranking functions?
+  - DENSE_RANK() will assign different ranks to rows with the same input value.
+- Given the data set 'my_numbers' with the values 10, 20, 30, 40, 50, what would be the result of this function? `select rank (28) within group (order by my_numbers desc) from dataset`
+  - 4
+
+## 5
+
+- Which component is an optional part of a CASE statement?
+  - ELSE
+- What is the result of this query?  `select coalesce('X', null, 'Z');`
+  - X
+- What is the purpose of the NULLIF() function?
+  - It turns non-null values into null.
+
+## 6
+
+- In order to use a sub select query within an IN() function, what criteria must be met?
+
+  - The sub select query must return a single column. 
+
+- What data types can be passed into the GENERATE_SERIES() function?
+
+  - numeric or timestamp
+
+- Which symbols are used to cast values from one data type to another in PostgreSQL
+
+  - ::
+
+- You have a column of values named 'data' that contains the numbers 10,  20, 30, 40, 50. What would be the result of this function? `lag(data, 1) over (order by data)`
+
+  - null, 10, 20, 30, 40
+
+- The ROW_NUMBER() function requires which additional clause?
+
+  - OVER
 
 
 
