@@ -383,8 +383,6 @@ order by sum(quantity) DESC;
 
 ## 예 1
 
-- 
-
 ```sql
 select sku,
 	product_name,
@@ -461,7 +459,7 @@ from sales.orders;
 
 ![image](https://user-images.githubusercontent.com/49010295/165502083-63d52869-ea68-4efd-9486-5750b6a63d07.png)
 
-## 예 5
+## 예 5 - first_value( ), last_value( )
 
 - first_value: 첫번째 값
 - last_value: 마지막 값
@@ -524,7 +522,7 @@ order by category_id, product_name, size;
 
 # CHAP 03: Statistics Based on Sorted Data within Groups
 
-## 예 1
+## 예 1 - percentile_disc( ), percentile_cont( )
 
 - [링크](https://leafo.net/guides/postgresql-calculating-percentile.html)
   - `percentile_disc` will return a value from the input set closest to the percentile you request
@@ -540,7 +538,7 @@ group by rollup (gender);
 
 ![image](https://user-images.githubusercontent.com/49010295/165579586-1c701526-f2d0-4577-97c1-a619cc57b372.png)
 
-## 예 2
+## 예 2 - percentile_cont( )
 
 ```sql
 select
@@ -550,7 +548,7 @@ select
 from public.people_heights;
 ```
 
-## 예 3
+## 예 3 - mode( )
 
 - mode() 제약 
   - 주의: 다른 동일한 값이 있음에도 1개만 리턴
@@ -585,9 +583,9 @@ group by rollup (category_id);
 
 ​              
 
-# CHAP 4: Ranking Data with Windows and Hypothetical Sets
+# CHAP 4: Ranking Data with Windows and Hypothetical Se ts
 
-## 예 1
+## 예 1 - rank(), dense_rank( )
 
 ```sql
 -- ranking with window functions
@@ -598,7 +596,7 @@ from public.people_heights
 order by gender, height_inches desc;
 ```
 
-## 예 2
+## 예 2 - hypothetical grouping set aggregate
 
 - 키가 70 인치인 사람을 남녀 각각으로 넣어봤을 때 순위 (hypothetical)
 
@@ -614,7 +612,7 @@ from public.people_heights
 group by rollup (gender);
 ```
 
-## 예 3
+## 예 3 - percent_rank( )
 
 - 백분위 랭크
 
@@ -631,7 +629,7 @@ from public.people_heights
 order by height_inches desc;
 ```
 
-## 예 4
+## 예 4 - cume_dist( )
 
 - The **CUME_DIST**() function returns the cumulative distribution of a value within a set of values.
 - percent_rank이랑 거의 비슷 (차이는 percent_rank는 계산에 본인 로우를 포함 x)
@@ -659,7 +657,48 @@ order by category_id, price desc;
 
 # CHAP 5: Define Output Values with Conditional Expressions
 
+## 예 1 - CASE
 
+```sql
+select sku, product_name, category_id,
+	case
+		when category_id = 1 then 'Olive Oils'
+		when category_id = 2 then 'Flavor Infused Oils'
+		when category_id = 3 then 'Bath and Beauty'
+		else 'category unknown'
+	end as "category description",
+	size, price
+from inventory.products;
+```
+
+## 예 2 - coalesce( )
+
+```sql
+select * from inventory.categories;
+
+insert into inventory.categories values
+(4, null, 'Gift Baskets');
+
+select category_id,
+	-- category_description이 널이면 product_line 값으로 대체
+	coalesce(category_description, product_line) as "description",
+	product_line
+from inventory.categories;
+```
+
+## 예 3 - nullif( )
+
+```sql
+select nullif('A', 'A');
+
+select * from inventory.products;
+
+select sku, product_name, category_id,
+	-- 사이즈가 32면 null 로 표기
+	nullif(size, 32) as "size",
+	price
+from inventory.products;
+```
 
 # CHAP 6: Additional Querying Techniques for Common Problems
 
