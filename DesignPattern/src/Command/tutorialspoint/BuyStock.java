@@ -1,4 +1,4 @@
-package Command;
+package Command.tutorialspoint;
 
 public class BuyStock implements Order {
 

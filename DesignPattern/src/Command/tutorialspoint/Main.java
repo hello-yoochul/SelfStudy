@@ -1,4 +1,4 @@
-package Command;
+package Command.tutorialspoint;
 
 /**
  * 커맨드 패턴이란? (Behavioral Pattern)
