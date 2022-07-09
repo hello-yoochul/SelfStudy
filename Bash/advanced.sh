@@ -18,7 +18,7 @@
 
 
 ## ================== array 배열 ==================
-#array=(one two three four [5]=five)
+#array=(one two three fo부ur [5]=five)
 #
 #echo "Array size: ${#array[*]}"
 #
