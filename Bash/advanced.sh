@@ -1,24 +1,97 @@
 #!/bin/bash
-## ==================  ==================
 
-# ————————— 결과 —————————
-
-## ==================  ==================
-
-# ————————— 결과 —————————
-
-### ================== 0~2 램던 숫자 출력 ==================
+### ================== 0~2 램덤 숫자 출력 ==================
 #for (( i = 0; i < 100; i++ )); do
 #    echo $((RANDOM%3))
 #done
 
-
-## ================== 함수 사용 ==================
-# ————————— 결과 —————————
+### ================== 함수 사용: 구구단 퀴즈 만들기 ==================
+#NUMBER=0
+#NUMBER1=0
+#NUMBER2=0
+#CORRECT_ANSWER=0
+#ANSWER=0
+#CORRECT=0
+#MAX_TRIES=3
+#
+#function generate_question(){
+#  generate_numbers
+#  determine_operation
+#  QUESTION="$NUMBER1 $OPERATION $NUMBER2"
+#}
+#function generate_numbers(){
+#  generate_number
+#  NUMBER1=$NUMBER
+#  generate_number
+#  NUMBER2=$NUMBER
+#}
+#function generate_number(){
+#  NUMBER=$((RANDOM%10+1))
+#}
+#function determine_operation(){
+#  RAND=$((RANDOM%3))
+#  case $RAND in
+#    0) OPERATION='*';;
+#    1) OPERATION='+';;
+#    2) OPERATION='-';;
+#  esac
+#}
+#
+#function calculate_answer(){
+#  CORRECT_ANSWER="$(echo "$QUESTION" | bc)"
+#}
+#
+#function check_answer(){
+#  if [ $ANSWER -eq $CORRECT_ANSWER 2>/dev/null ] ; then
+#      echo "Correct!"
+#      CORRECT=1
+#    if [ $TRY -ne 1 ]; then
+#      write_log
+#    fi
+#  else
+#    if [ $TRY -eq $MAX_TRIES ]; then
+#      TRY=$(($MAX_TRIES +1))
+#      write_log
+#      echo "The correct answer was  "
+#      echo "Let's try the next one (press any key)"
+#      read
+#    else
+#      TRY=$(($TRY+1))
+#      echo "Nope sorry, please try again... (attempt $TRY)"
+#    fi
+#  fi
+#}
+#
+#function init_log(){
+#  echo "------------- Log for $(date +%d-%m-%Y' '%H:%M)" >> log
+#}
+#
+#function write_log(){
+#  if [ $TRY -le $MAX_TRIES ]; then
+#    echo "Answer to $QUESTION ($CORRECT_ANSWER) given in $TRY tries" >> log
+#  else
+#    echo "Answer to $SQUESTION ($CORRECT_ANSWER) not given" >> log
+#  fi
+#}
+#
+#
+#
+## ————————— 결과 —————————
+##How much is 3 - 7 ? (attempt S1)
+##-4
+##Correct!
+##(Correct answer is -4)
+##How much is 8 + 5 ? (attempt S1)
+##13
+##Correct!
+##(Correct answer is 13)
+##How much is 2 * 9 ? (attempt S1)
+##18
+##Correct!
 
 
 ## ================== array 배열 ==================
-#array=(one two three fo부ur [5]=five)
+#array=(one two three four [5]=five)
 #
 #echo "Array size: ${#array[*]}"
 #
@@ -253,4 +326,3 @@
 #logger PROCESSMONITOR: $PROCESS stopped at `date`
 #/etc/init.d/apache2 start
 #mail -s "Apache server just stopped" mail@example.com < .
-
